@@ -22,7 +22,7 @@ jobs:
       - name: Run Hadolint on Dockerfile
         run: hadolint Dockerfile
   # jobs untuk build dan push image ke github packages
-  build-app-karsajobs:
+  build-app-karsajobs-ui:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
