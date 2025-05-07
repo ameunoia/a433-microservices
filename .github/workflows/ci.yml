@@ -1,9 +1,14 @@
+# nama untuk workflow
 name: ci-pipeline
 on:
+  # trigger untuk branch karsajobs saja
   push:
     branches:
       - karsajobs
+
+  # ci pipeline untuk branch karsajobs
 jobs:
+  #jobs untuk linting docker file
   lint-dockerfile:
     runs-on: ubuntu-latest
     steps:
@@ -17,7 +22,7 @@ jobs:
 
       - name: Run Hadolint on Dockerfile
         run: hadolint Dockerfile
-
+  #jobs untuk unit test project Go
   test-app:
     name: Run Unit Tests
     runs-on: ubuntu-latest
@@ -35,7 +40,7 @@ jobs:
 
       - name: Run unit tests
         run: go test -v -short --count=1 $(go list ./...)
-
+  #jobs untuk build image dan push ke github packages
   build-app-karsajobs:
     runs-on: ubuntu-latest
     steps:
