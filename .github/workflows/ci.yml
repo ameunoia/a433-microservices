@@ -28,7 +28,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: "1.15" # Sesuaikan versi Go jika diperlukan
+          go-version: "1.15"
 
       - name: Get dependencies
         run: go mod download
