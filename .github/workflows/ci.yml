@@ -5,7 +5,7 @@ on:
       - karsajobs
 jobs:
   lint-dockerfile:
-    runs-on: ubuntu:22.04
+    runs-on: ubuntu:latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -16,7 +16,7 @@ jobs:
       - name: Lint Dockerfile
         run: hadolint Dockerfile
   test-app:
-    runs-on: ubuntu:22.04
+    runs-on: ubuntu:latest
     if: github.ref == 'refs/heads/karsajobs'
     steps:
       - name: Checkout code
