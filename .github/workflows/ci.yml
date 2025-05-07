@@ -8,25 +8,34 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Install hadolint
+        uses: actions/checkout@v4
+
+      - name: Install Hadolint
         run: |
-          sudo apt-get update
-          sudo apt-get install -y hadolint
-      - name: Lint Dockerfile
+          sudo wget -O /usr/local/bin/hadolint https://github.com/hadolint/hadolint/releases/latest/download/hadolint-Linux-x86_64
+          sudo chmod +x /usr/local/bin/hadolint
+
+      - name: Run Hadolint on Dockerfile
         run: hadolint Dockerfile
+
   test-app:
+    name: Run Unit Tests
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/karsajobs'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+
       - name: Set up Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v4
         with:
-          go-version: "1.15"
-      - name: Run tests
-        run: go test -v -short --count=1 $(go list ./..)
+          go-version: "1.15" # Sesuaikan versi Go jika diperlukan
+
+      - name: Get dependencies
+        run: go mod download
+
+      - name: Run unit tests
+        run: go test -v -short --count=1 $(go list ./...)
+
   build-app-karsajobs:
     runs-on: ubuntu-latest
     steps:
