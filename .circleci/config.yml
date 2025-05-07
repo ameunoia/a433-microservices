@@ -1,0 +1,52 @@
+version: 2.1
+
+jobs:
+  lint-dockerfile:
+    docker:
+      - image: circleci/python:3.8 # Bisa menggunakan image yang sesuai
+    steps:
+      - checkout
+      - run:
+          name: Install hadolint
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y hadolint
+      - run:
+          name: Lint Dockerfile
+          command: hadolint Dockerfile
+
+  test-app:
+    docker:
+      - image: circleci/golang:1.15
+    steps:
+      - checkout
+      - run:
+          name: Set up Go
+          command: |
+            go version  # Menjalankan perintah Go untuk memastikan Go sudah terpasang
+      - run:
+          name: Run tests
+          command: go test -v -short --count=1 $(go list ./...)
+
+  build-app-karsajobs:
+    docker:
+      - image: circleci/python:3.8 # Bisa menggunakan image yang sesuai
+    steps:
+      - checkout
+      - run:
+          name: Run build and push script
+          command: bash build_push_image_karsajobs.sh
+          environment:
+            CR_PAT: $CR_PAT # Menggunakan environment variable yang diset pada CircleCI
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - lint-dockerfile
+      - test-app:
+          requires:
+            - lint-dockerfile
+      - build-app-karsajobs:
+          requires:
+            - test-app
